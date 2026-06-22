@@ -38,7 +38,7 @@ const SubscriptionCard = ({name, price, currency, icon, billing, color, category
                         <View className='sub-row-copy'>
                             <Text className='sub-label'>Started:</Text>
                             <Text className='sub-value' numberOfLines={1} ellipsizeMode='tail'>
-                                {startDate? formatSubscriptionDateTime(startDate) : " " }
+                                {formatSubscriptionDateTime(startDate)}
                             </Text>
                         </View>
                     </View>
@@ -46,7 +46,7 @@ const SubscriptionCard = ({name, price, currency, icon, billing, color, category
                         <View className='sub-row-copy'>
                             <Text className='sub-label'>Renewal:</Text>
                             <Text className='sub-value' numberOfLines={1} ellipsizeMode='tail'>
-                                {renewalDate? formatSubscriptionDateTime(renewalDate) : " "}
+                                {formatSubscriptionDateTime(renewalDate)}
                             </Text>
                         </View>
                     </View>
@@ -54,7 +54,7 @@ const SubscriptionCard = ({name, price, currency, icon, billing, color, category
                         <View className='sub-row-copy'>
                             <Text className='sub-label'>Status:</Text>
                             <Text className='sub-value' numberOfLines={1} ellipsizeMode='tail'>
-                                {status? formatStatusLabel(status):""}
+                                {formatStatusLabel(status)}
                             </Text>
                         </View>
                     </View>
