@@ -17,6 +17,13 @@
     --color-destructive: #dc2626;
     --color-subscription: #8fd1bd;
 
+    --font-sans: sans-regular;
+    --font-sans-light: sans-light;
+    --font-sans-medium: sans-medium;
+    --font-sans-semibold: sans-semibold;
+    --font-sans-bold: sans-bold;
+    --font-sans-extrabold: sans-extrabold;
+
     --spacing-0: 0px;
     --spacing-1: 4px;
     --spacing-2: 8px;
@@ -79,19 +86,19 @@
     }
 
     .home-add-icon {
-        @apply size-12;
+        @apply size-8 justify-center;
     }
 
     .home-balance-card {
-        @apply my-2.5 min-h-50 justify-between gap-5 rounded-bl-4xl rounded-tr-4xl bg-accent p-6;
+        @apply my-2.5 min-h-50 justify-between gap-5 rounded-br-4xl rounded-bl-4xl rounded-tl-4xl rounded-tr-4xl bg-accent p-6;
     }
 
     .home-balance-label {
-        @apply text-xl font-sans-semibold text-white/80;
+        @apply text-2xl font-sans-semibold text-white/80;
     }
 
     .home-balance-row {
-        @apply flex-row items-center justify-between;
+        @apply flex-row items-end justify-between;
     }
 
     .home-balance-amount {
@@ -127,11 +134,11 @@
     }
 
     .upcoming-icon {
-        @apply size-14;
+        @apply size-10;
     }
 
     .upcoming-price {
-        @apply text-lg font-sans-bold text-primary;
+        @apply text-base font-sans-bold text-primary;
     }
 
     .upcoming-meta {
@@ -159,7 +166,7 @@
     }
 
     .sub-icon {
-        @apply size-16 rounded-lg;
+        @apply size-12 rounded-lg;
     }
 
     .sub-copy {
@@ -179,7 +186,7 @@
     }
 
     .sub-price {
-        @apply mb-1 text-lg font-sans-bold text-primary;
+        @apply mt-10 text-base font-sans-bold text-primary;
     }
 
     .sub-billing {
