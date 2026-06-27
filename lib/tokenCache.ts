@@ -16,12 +16,11 @@ export const tokenCache = {
       return null;
     }
   },
-  async saveToken(key: string, value: string) {
+  async saveToken(key: string, value: string): Promise<void> {
     try {
-      return SecureStore.setItemAsync(key, value);
+      await SecureStore.setItemAsync(key, value);
     } catch (err) {
       console.error("SecureStore save item error: ", err);
-      return;
     }
   },
 };

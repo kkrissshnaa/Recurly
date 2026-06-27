@@ -29,6 +29,7 @@ export default function SignUp() {
   const [pendingVerification, setPendingVerification] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
 
   const isValidEmail = (emailStr: string) => {
     return /\S+@\S+\.\S+/.test(emailStr);
@@ -37,12 +38,13 @@ export default function SignUp() {
   const handleSignUp = async () => {
     if (!isLoaded) return;
 
-    if (!email || !password || !confirmPassword) {
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail || !password || !confirmPassword) {
       setError("Please fill in all fields.");
       return;
     }
 
-    if (!isValidEmail(email)) {
+    if (!isValidEmail(normalizedEmail)) {
       setError("Please enter a valid email address.");
       return;
     }
@@ -62,14 +64,15 @@ export default function SignUp() {
 
     try {
       await signUp.create({
-        emailAddress: email,
+        emailAddress: normalizedEmail,
         password,
       });
 
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       setPendingVerification(true);
     } catch (err: any) {
-      console.error(JSON.stringify(err, null, 2));
+      const errorCode = err.errors?.[0]?.code || err.code || "unknown_error";
+      console.error("Sign up failed:", errorCode);
       const message =
         err.errors?.[0]?.longMessage ||
         err.message ||
@@ -102,7 +105,8 @@ export default function SignUp() {
         setError("Account verification failed. Please try again.");
       }
     } catch (err: any) {
-      console.error(JSON.stringify(err, null, 2));
+      const errorCode = err.errors?.[0]?.code || err.code || "unknown_error";
+      console.error("Verification failed:", errorCode);
       const message =
         err.errors?.[0]?.longMessage ||
         err.message ||
@@ -114,14 +118,18 @@ export default function SignUp() {
   };
 
   const handleResendCode = async () => {
-    if (!isLoaded) return;
+    if (!isLoaded || resending) return;
+    setResending(true);
     setError(null);
     try {
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       Alert.alert("Code Sent", "Verification code has been resent to your email.");
     } catch (err: any) {
-      console.error(JSON.stringify(err, null, 2));
+      const errorCode = err.errors?.[0]?.code || err.code || "unknown_error";
+      console.error("Resend code failed:", errorCode);
       setError(err.errors?.[0]?.longMessage || err.message || "Failed to resend code.");
+    } finally {
+      setResending(false);
     }
   };
 
@@ -313,8 +321,16 @@ export default function SignUp() {
 
                 {/* Code resend and email correction links */}
                 <View className="flex-row justify-between items-center mt-2 px-1">
-                  <Pressable onPress={handleResendCode} className="active:opacity-60">
-                    <Text className="text-sm font-sans-semibold text-accent font-semibold">Resend code</Text>
+                  <Pressable
+                    onPress={handleResendCode}
+                    className={`active:opacity-60 ${resending ? "opacity-50" : ""}`}
+                    disabled={resending}
+                  >
+                    {resending ? (
+                      <Text className="text-sm font-sans-semibold text-accent font-semibold">Resending...</Text>
+                    ) : (
+                      <Text className="text-sm font-sans-semibold text-accent font-semibold">Resend code</Text>
+                    )}
                   </Pressable>
                   <Pressable
                     onPress={() => {

@@ -27,7 +27,9 @@ export default function SignIn() {
 
   const handleSignIn = async () => {
     if (!isLoaded) return;
-    if (!email || !password) {
+
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail || !password) {
       setError("Please fill in all fields.");
       return;
     }
@@ -37,7 +39,7 @@ export default function SignIn() {
 
     try {
       const result = await signIn.create({
-        identifier: email,
+        identifier: normalizedEmail,
         password,
       });
 
@@ -48,7 +50,8 @@ export default function SignIn() {
         setError("Sign in requires additional verification steps.");
       }
     } catch (err: any) {
-      console.error(JSON.stringify(err, null, 2));
+      const errorCode = err.errors?.[0]?.code || err.code || "unknown_error";
+      console.error("Sign in failed:", errorCode);
       const message =
         err.errors?.[0]?.longMessage ||
         err.message ||

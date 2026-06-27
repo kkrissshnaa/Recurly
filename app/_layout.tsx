@@ -2,7 +2,7 @@ import "@/global.css";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack, useRouter, useSegments } from "expo-router";
 import { useEffect } from "react";
-import { ClerkProvider, ClerkLoaded, useAuth } from "@clerk/clerk-expo";
+import { ClerkProvider, ClerkLoaded, ClerkLoading, useAuth } from "@clerk/clerk-expo";
 import { tokenCache } from "@/lib/tokenCache";
 import { View, ActivityIndicator } from "react-native";
 
@@ -20,6 +20,12 @@ function InitialLayout() {
   const { isLoaded, isSignedIn } = useAuth();
   const segments = useSegments();
   const router = useRouter();
+
+  useEffect(() => {
+    if (isLoaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [isLoaded]);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -56,16 +62,15 @@ export default function RootLayout() {
     "sans-light": require("../assets/fonts/PlusJakartaSans-Light.ttf")
   });
 
-  useEffect(() => {
-    if (fontsLoaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
   if (!fontsLoaded) return null;
 
   return (
     <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
+      <ClerkLoading>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#fff9e3" }}>
+          <ActivityIndicator size="large" color="#ea7a53" />
+        </View>
+      </ClerkLoading>
       <ClerkLoaded>
         <InitialLayout />
       </ClerkLoaded>

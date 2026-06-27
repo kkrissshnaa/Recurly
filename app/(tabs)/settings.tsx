@@ -3,7 +3,7 @@ import images from "@/constants/images";
 import { useClerk, useUser } from "@clerk/clerk-expo";
 import { styled } from "nativewind";
 import React, { useState } from "react";
-import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Image, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNsafeAreaView);
@@ -17,8 +17,12 @@ export default function Settings() {
     setLoading(true);
     try {
       await signOut();
-    } catch (err) {
+    } catch (err: any) {
       console.error("Sign out error:", err);
+      Alert.alert(
+        "Sign Out Failed",
+        err?.message || "An error occurred while signing out. Please try again."
+      );
     } finally {
       setLoading(false);
     }
