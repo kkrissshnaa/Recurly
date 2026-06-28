@@ -43,3 +43,4 @@ app-example
 
 # clerk implementation guide
 clerk_implementation_guide.html
+.env

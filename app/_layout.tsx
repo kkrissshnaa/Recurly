@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { ClerkProvider, ClerkLoaded, ClerkLoading, useAuth } from "@clerk/clerk-expo";
 import { tokenCache } from "@/lib/tokenCache";
 import { View, ActivityIndicator } from "react-native";
+import { PostHogProvider } from "posthog-react-native";
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
@@ -65,15 +66,20 @@ export default function RootLayout() {
   if (!fontsLoaded) return null;
 
   return (
-    <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
-      <ClerkLoading>
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#fff9e3" }}>
-          <ActivityIndicator size="large" color="#ea7a53" />
-        </View>
-      </ClerkLoading>
-      <ClerkLoaded>
-        <InitialLayout />
-      </ClerkLoaded>
-    </ClerkProvider>
+    <PostHogProvider
+      apiKey={process.env.EXPO_PUBLIC_POSTHOG_KEY!}
+      options={{ host: process.env.EXPO_PUBLIC_POSTHOG_HOST }}
+    >
+      <ClerkProvider publishableKey={publishableKey} tokenCache={tokenCache}>
+        <ClerkLoading>
+          <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#fff9e3" }}>
+            <ActivityIndicator size="large" color="#ea7a53" />
+          </View>
+        </ClerkLoading>
+        <ClerkLoaded>
+          <InitialLayout />
+        </ClerkLoaded>
+      </ClerkProvider>
+    </PostHogProvider>
   );
 }
