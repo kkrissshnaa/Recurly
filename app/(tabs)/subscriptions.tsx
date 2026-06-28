@@ -1,9 +1,10 @@
+import { useSubscriptions } from "@/context/SubscriptionsContext";
 import SubscriptionCard from "@/components/SubscriptionCard";
-import { HOME_SUBSCRIPTIONS } from "@/constants/data";
+import { icons } from "@/constants/icons";
 import clsx from "clsx";
 import { styled } from "nativewind";
 import { useMemo, useState } from "react";
-import { FlatList, Pressable, ScrollView, Text, TextInput, View } from "react-native";
+import { FlatList, Pressable, ScrollView, Text, TextInput, View, Image } from "react-native";
 import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNsafeAreaView);
@@ -48,24 +49,27 @@ function matchesFilters(
 
 export default function Subscriptions() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [isFilterVisible, setIsFilterVisible] = useState(false);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<string | null>(null);
 
+  const { subscriptions } = useSubscriptions();
+
   const categories = useMemo(
     () =>
-      [...new Set(HOME_SUBSCRIPTIONS.map((subscription) => subscription.category).filter(Boolean))].sort(),
-    []
+      [...new Set(subscriptions.map((subscription) => subscription.category).filter(Boolean))].sort(),
+    [subscriptions]
   );
 
   const filteredSubscriptions = useMemo(
     () =>
-      HOME_SUBSCRIPTIONS.filter(
+      subscriptions.filter(
         (subscription) =>
           matchesSearch(subscription, searchQuery) &&
           matchesFilters(subscription, statusFilter, categoryFilter)
       ),
-    [searchQuery, statusFilter, categoryFilter]
+    [subscriptions, searchQuery, statusFilter, categoryFilter]
   );
 
   const hasActiveFilters =
@@ -84,79 +88,98 @@ export default function Subscriptions() {
         ListHeaderComponent={
           <View className="mb-5">
             <Text className="mb-5 text-3xl font-sans-bold text-primary">Subscriptions</Text>
-            <TextInput
-              className="mb-5 rounded-2xl border border-border bg-card px-4 py-3.5 text-base font-sans-medium text-primary"
-              placeholder="Search subscriptions"
-              placeholderTextColor="rgba(8,17,38,0.3)"
-              value={searchQuery}
-              onChangeText={setSearchQuery}
-              autoCapitalize="none"
-              autoCorrect={false}
-            />
-
-            <Text className="mb-2 pl-0.5 text-sm font-sans-bold uppercase tracking-wider text-muted-foreground">
-              Status
-            </Text>
-            <View className="picker-row mb-5">
-              {STATUS_FILTERS.map(({ value, label }) => (
-                <Pressable
-                  key={value}
-                  className={clsx("picker-option", statusFilter === value && "picker-option-active")}
-                  onPress={() => setStatusFilter(value)}
-                >
-                  <Text
-                    className={clsx(
-                      "picker-option-text",
-                      statusFilter === value && "picker-option-text-active"
-                    )}
-                  >
-                    {label}
-                  </Text>
-                </Pressable>
-              ))}
+            <View className="mb-5 flex-row gap-3">
+              <TextInput
+                className="flex-1 rounded-2xl border border-border bg-card px-4 py-3.5 text-base font-sans-medium text-primary"
+                placeholder="Search subscriptions"
+                placeholderTextColor="rgba(8,17,38,0.3)"
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+              <Pressable
+                onPress={() => setIsFilterVisible(!isFilterVisible)}
+                className={clsx(
+                  "size-[52px] items-center justify-center rounded-2xl border border-border bg-card",
+                  isFilterVisible && "border-accent bg-accent/10"
+                )}
+              >
+                <Image 
+                  source={icons.setting} 
+                  className="size-6" 
+                  style={{ tintColor: isFilterVisible ? "#ea7a53" : "#081126" }} 
+                />
+              </Pressable>
             </View>
 
-            <Text className="mb-2 pl-0.5 text-sm font-sans-bold uppercase tracking-wider text-muted-foreground">
-              Category
-            </Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerClassName="gap-2"
-            >
-              <Pressable
-                className={clsx("category-chip", categoryFilter === "all" && "category-chip-active")}
-                onPress={() => setCategoryFilter("all")}
-              >
-                <Text
-                  className={clsx(
-                    "category-chip-text",
-                    categoryFilter === "all" && "category-chip-text-active"
-                  )}
-                >
-                  All
+            {isFilterVisible && (
+              <View className="mb-5">
+                <Text className="mb-2 pl-0.5 text-sm font-sans-bold uppercase tracking-wider text-muted-foreground">
+                  Status
                 </Text>
-              </Pressable>
-              {categories.map((category) => (
-                <Pressable
-                  key={category}
-                  className={clsx(
-                    "category-chip",
-                    categoryFilter === category && "category-chip-active"
-                  )}
-                  onPress={() => setCategoryFilter(category!)}
+                <View className="picker-row mb-5">
+                  {STATUS_FILTERS.map(({ value, label }) => (
+                    <Pressable
+                      key={value}
+                      className={clsx("picker-option", statusFilter === value && "picker-option-active")}
+                      onPress={() => setStatusFilter(value)}
+                    >
+                      <Text
+                        className={clsx(
+                          "picker-option-text",
+                          statusFilter === value && "picker-option-text-active"
+                        )}
+                      >
+                        {label}
+                      </Text>
+                    </Pressable>
+                  ))}
+                </View>
+
+                <Text className="mb-2 pl-0.5 text-sm font-sans-bold uppercase tracking-wider text-muted-foreground">
+                  Category
+                </Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerClassName="gap-2"
                 >
-                  <Text
-                    className={clsx(
-                      "category-chip-text",
-                      categoryFilter === category && "category-chip-text-active"
-                    )}
+                  <Pressable
+                    className={clsx("category-chip", categoryFilter === "all" && "category-chip-active")}
+                    onPress={() => setCategoryFilter("all")}
                   >
-                    {category}
-                  </Text>
-                </Pressable>
-              ))}
-            </ScrollView>
+                    <Text
+                      className={clsx(
+                        "category-chip-text",
+                        categoryFilter === "all" && "category-chip-text-active"
+                      )}
+                    >
+                      All
+                    </Text>
+                  </Pressable>
+                  {categories.map((category) => (
+                    <Pressable
+                      key={category}
+                      className={clsx(
+                        "category-chip",
+                        categoryFilter === category && "category-chip-active"
+                      )}
+                      onPress={() => setCategoryFilter(category!)}
+                    >
+                      <Text
+                        className={clsx(
+                          "category-chip-text",
+                          categoryFilter === category && "category-chip-text-active"
+                        )}
+                      >
+                        {category}
+                      </Text>
+                    </Pressable>
+                  ))}
+                </ScrollView>
+              </View>
+            )}
           </View>
         }
         renderItem={({ item }) => (

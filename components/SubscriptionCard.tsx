@@ -1,14 +1,22 @@
 import { formatCurrency, formatStatusLabel, formatSubscriptionDateTime } from '@/lib/utils'
 import clsx from 'clsx'
 import React from 'react'
-import { Image, Pressable, Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
+import { Image } from 'expo-image'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 
 const SubscriptionCard = ({name, price, currency, icon, billing, color, category, plan, renewalDate, expanded, onPress, paymentMethod, startDate, status}: SubscriptionCardProps) => {
   return (
     <Pressable onPress={onPress} className={clsx('sub-card', expanded ? 'sub-card-expanded': 'bg-card')} style={!expanded && color ? {backgroundColor : color} : undefined} >
         <View className='sub-head'>
             <View className='sub-main'>
-                <Image source={icon} className='sub-icon'/>
+                {typeof icon === 'string' ? (
+                  <View className='sub-icon items-center justify-center bg-white rounded-lg' style={{ width: 48, height: 48 }}>
+                    <MaterialCommunityIcons name={icon as any} size={28} color="#081126" />
+                  </View>
+                ) : (
+                  <Image source={icon} className='sub-icon' style={{ width: 48, height: 48, borderRadius: 8 }}/>
+                )}
                 <View className='Sub-copy'>
                     <Text numberOfLines={1} className='sub-title'>
                         {name}
