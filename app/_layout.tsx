@@ -6,6 +6,7 @@ import { ClerkProvider, ClerkLoaded, ClerkLoading, useAuth } from "@clerk/clerk-
 import { tokenCache } from "@/lib/tokenCache";
 import { View, ActivityIndicator } from "react-native";
 import { PostHogProvider } from "posthog-react-native";
+import { SubscriptionsProvider } from "@/context/SubscriptionsContext";
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
@@ -50,7 +51,11 @@ function InitialLayout() {
     );
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <SubscriptionsProvider>
+      <Stack screenOptions={{ headerShown: false }} />
+    </SubscriptionsProvider>
+  );
 }
 
 export default function RootLayout() {
