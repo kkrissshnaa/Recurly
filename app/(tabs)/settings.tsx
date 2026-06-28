@@ -35,7 +35,7 @@ export default function Settings() {
   const emailAddress = user?.emailAddresses[0]?.emailAddress || "";
 
   return (
-    <SafeAreaView className="flex-1 bg-background mb-10">
+    <SafeAreaView className="flex-1 bg-background mb-5">
       <ScrollView className="flex-1 px-5 pt-8" contentContainerClassName="pb-32">
         {/* Header */}
         <View className="mb-8">
