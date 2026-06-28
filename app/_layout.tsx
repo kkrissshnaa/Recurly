@@ -19,7 +19,7 @@ if (!publishableKey) {
 SplashScreen.preventAutoHideAsync();
 
 function InitialLayout() {
-  const { isLoaded, isSignedIn } = useAuth();
+  const { isLoaded, isSignedIn, userId } = useAuth();
   const segments = useSegments();
   const router = useRouter();
 
@@ -52,7 +52,7 @@ function InitialLayout() {
   }
 
   return (
-    <SubscriptionsProvider>
+    <SubscriptionsProvider key={userId || 'guest'}>
       <Stack screenOptions={{ headerShown: false }} />
     </SubscriptionsProvider>
   );

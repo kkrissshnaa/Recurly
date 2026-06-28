@@ -1,4 +1,3 @@
-import { useSubscriptions } from "@/context/SubscriptionsContext";
 import CreateSubscriptionModal from "@/components/CreateSubscriptionModal";
 import ListHeading from "@/components/ListHeading";
 import SubscriptionCard from "@/components/SubscriptionCard";
@@ -6,10 +5,12 @@ import UpcomingSubsCard from "@/components/UpcomingSubsCard";
 import { HOME_BALANCE, HOME_USER, UPCOMING_SUBSCRIPTIONS } from "@/constants/data";
 import { icons } from "@/constants/icons";
 import images from "@/constants/images";
+import { useSubscriptions } from "@/context/SubscriptionsContext";
 import "@/global.css";
 import { formatCurrency } from "@/lib/utils";
 import { useUser } from "@clerk/clerk-expo";
 import dayjs from "dayjs";
+import { useRouter } from "expo-router";
 import { styled } from "nativewind";
 import { useState } from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
@@ -19,6 +20,7 @@ const SafeAreaView = styled(RNsafeAreaView);
 
 
 export default function App() {
+  const router = useRouter();
   const { user } = useUser();
   const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -45,8 +47,12 @@ export default function App() {
                 />
                 <Text className="home-user-name">{displayName}</Text>
               </View>
-              <Pressable onPress={() => setModalVisible(true)}>
-                <Image source={icons.add} className="home-add-icon" />
+              <Pressable
+                onPress={() => setModalVisible(true)}
+                accessibilityRole="button"
+                accessibilityLabel="Add Subscription"
+              >
+                <Image source={icons.add} className="home-add-icon" accessible={false} />
               </Pressable>
             </View>
 
@@ -63,7 +69,7 @@ export default function App() {
             </View>
 
             <View className="mb-5" >
-              <ListHeading title="Upcoming" />
+              <ListHeading title="Upcoming" onViewAll={() => router.push("/(tabs)/subscriptions")} />
               <FlatList
                 data={UPCOMING_SUBSCRIPTIONS}
                 renderItem={({ item }) => (<UpcomingSubsCard {...item} />)}
@@ -74,7 +80,7 @@ export default function App() {
               />
             </View>
 
-            <ListHeading title="All Subscriptions" />
+            <ListHeading title="All Subscriptions" onViewAll={() => router.push("/(tabs)/subscriptions")} />
           </>
         )}
         data={subscriptions}

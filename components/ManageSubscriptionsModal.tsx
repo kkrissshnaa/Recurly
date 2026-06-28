@@ -9,6 +9,7 @@ import {
   Pressable,
   Text,
   View,
+  Alert,
 } from "react-native";
 import { Image } from "expo-image";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -74,7 +75,20 @@ export default function ManageSubscriptionsModal({
                   </View>
                 </View>
                 <Pressable
-                  onPress={() => deleteSubscription(item.id)}
+                  onPress={() => {
+                    Alert.alert(
+                      "Delete Subscription",
+                      `Are you sure you want to delete ${item.name}?`,
+                      [
+                        { text: "Cancel", style: "cancel" },
+                        { 
+                          text: "Delete", 
+                          style: "destructive", 
+                          onPress: () => deleteSubscription(item.id) 
+                        }
+                      ]
+                    );
+                  }}
                   className="items-center justify-center p-2 rounded-xl bg-destructive/10"
                 >
                   <Text className="text-sm font-sans-bold text-destructive">Delete</Text>

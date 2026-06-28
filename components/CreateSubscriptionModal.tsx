@@ -53,7 +53,8 @@ export default function CreateSubscriptionModal({
   const [frequency, setFrequency] = useState<"Monthly" | "Yearly">("Monthly");
   const [category, setCategory] = useState("Other");
 
-  const isValid = name.trim().length > 0 && Number(price) > 0;
+  const parsedPrice = Number(price);
+  const isValid = name.trim().length > 0 && Number.isFinite(parsedPrice) && parsedPrice > 0;
 
   const handleSubmit = () => {
     if (!isValid) return;
@@ -123,12 +124,21 @@ export default function CreateSubscriptionModal({
           <View className="modal-container">
             <View className="modal-header">
               <Text className="modal-title">New Subscription</Text>
-              <Pressable onPress={handleClose} className="modal-close">
+              <Pressable
+                onPress={handleClose}
+                className="modal-close"
+                accessibilityRole="button"
+                accessibilityLabel="Close modal"
+              >
                 <Text className="modal-close-text">×</Text>
               </Pressable>
             </View>
 
-            <ScrollView className="modal-body" contentContainerClassName="gap-5 pb-10">
+            <ScrollView
+              className="modal-body"
+              contentContainerClassName="gap-5 pb-10"
+              keyboardShouldPersistTaps="handled"
+            >
               <View className="auth-field">
                 <Text className="auth-label">Name</Text>
                 <TextInput

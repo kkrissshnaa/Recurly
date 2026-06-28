@@ -100,6 +100,9 @@ export default function Subscriptions() {
               />
               <Pressable
                 onPress={() => setIsFilterVisible(!isFilterVisible)}
+                accessibilityRole="button"
+                accessibilityLabel="Toggle filters"
+                accessibilityState={{ expanded: isFilterVisible }}
                 className={clsx(
                   "size-[52px] items-center justify-center rounded-2xl border border-border bg-card",
                   isFilterVisible && "border-accent bg-accent/10"
