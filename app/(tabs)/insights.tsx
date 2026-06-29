@@ -11,13 +11,13 @@ import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
 const SafeAreaView = styled(RNsafeAreaView);
 
 const rawChartData = [
-  { day: 'Mon', value: 35 },
-  { day: 'Tue', value: 30 },
-  { day: 'Wed', value: 20 },
-  { day: 'Thr', value: 40 },
-  { day: 'Fri', value: 35 },
-  { day: 'Sat', value: 18 },
-  { day: 'Sun', value: 22 },
+  { day: 'Mon', value: 2905 },
+  { day: 'Tue', value: 2490 },
+  { day: 'Wed', value: 1660 },
+  { day: 'Thr', value: 3320 },
+  { day: 'Fri', value: 2905 },
+  { day: 'Sat', value: 1494 },
+  { day: 'Sun', value: 1826 },
 ];
 
 const Insights = () => {
@@ -26,13 +26,13 @@ const Insights = () => {
   // Make chart functional by deriving state dynamically
   const { chartData, yLabels, yMax } = useMemo(() => {
     const maxVal = Math.max(...rawChartData.map((d) => d.value));
-    
-    // Calculate Y-axis top value (rounded up to nearest 10 with a minimum of 10)
-    const topY = Math.max(10, Math.ceil(maxVal / 10) * 10);
-    
+
+    // Calculate Y-axis top value (rounded up to nearest 1000 with a minimum of 1000)
+    const topY = Math.max(1000, Math.ceil(maxVal / 1000) * 1000);
+
     // Create 5 Y-axis labels
     const labels = [topY, topY * 0.75, topY * 0.5, topY * 0.25, 0].map(v => Math.round(v));
-    
+
     // Mark the maximum value as highlighted
     const data = rawChartData.map((d) => ({
       ...d,
@@ -45,16 +45,16 @@ const Insights = () => {
   return (
     <SafeAreaView className="flex-1 bg-background px-5 pt-5 pb-20">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-24">
-        
+
         {/* Header */}
         <View className="flex-row justify-between items-center mb-6">
-          <Pressable 
-            onPress={() => router.back()} 
+          <Pressable
+            onPress={() => router.back()}
             className="size-12 rounded-full border border-black/10 items-center justify-center bg-transparent"
           >
             <Image source={icons.back} className="size-5" resizeMode="contain" />
           </Pressable>
-          <Text className="text-2xl font-sans-bold text-primary">Monthly Insights</Text>
+          <Text className="text-2xl font-sans-bold text-primary">Monthly insights</Text>
           <Pressable className="size-12 rounded-full border border-black/10 items-center justify-center bg-transparent">
             <View className="flex-row gap-[3px]">
               <View className="size-1 bg-primary rounded-full" />
@@ -65,10 +65,10 @@ const Insights = () => {
         </View>
 
         {/* Chart Section */}
-        <ListHeading title="Upcoming" onViewAll={() => {}} />
+        <ListHeading title="Upcoming" onViewAll={() => { }} />
         <View className="bg-[#F6EEDA] rounded-3xl p-6 mt-4">
           <View className="relative h-[220px] w-full pt-4">
-            
+
             {/* Background Layer: Y-axis Labels and Dashed Lines */}
             <View className="absolute inset-0 pt-4 pb-8 flex-row">
               {/* Y-axis Labels */}
@@ -91,7 +91,7 @@ const Insights = () => {
             <View className="absolute inset-0 pt-4 pb-0 flex-row">
               {/* Spacer matching Y-axis width */}
               <View className="w-8 mr-2" />
-              
+
               {/* Bars Container */}
               <View className="flex-1 flex-row justify-between">
                 {chartData.map((item, index) => (
@@ -100,7 +100,7 @@ const Insights = () => {
                     <View className="flex-1 justify-end items-center pb-2 w-full">
                       {item.highlight && (
                         <View className="bg-white rounded-[10px] px-2.5 py-[3px] absolute -top-8 z-20 items-center justify-center">
-                          <Text className="text-accent font-sans-bold text-[11px]">${item.value}</Text>
+                          <Text className="text-accent font-sans-bold text-[11px]">₹{item.value}</Text>
                           <View className="absolute -bottom-1 w-2 h-2 bg-white rotate-45" />
                         </View>
                       )}
@@ -117,7 +117,7 @@ const Insights = () => {
                 ))}
               </View>
             </View>
-            
+
           </View>
         </View>
 
@@ -128,38 +128,38 @@ const Insights = () => {
             <Text className="text-[13px] font-sans-medium text-muted-foreground mt-1">March 2026</Text>
           </View>
           <View className="items-end">
-            <Text className="text-xl font-sans-bold text-primary">-$424.63</Text>
+            <Text className="text-xl font-sans-bold text-primary">-₹35,244.29</Text>
             <Text className="text-[13px] font-sans-medium text-muted-foreground mt-1">+12%</Text>
           </View>
         </View>
 
         {/* History Section */}
-        <ListHeading title="History" onViewAll={() => {}} />
+        <ListHeading title="History" onViewAll={() => { }} />
         <View className="mt-4 gap-4 pb-8">
           <SubscriptionCard
             name="Claude"
-            price={9.84}
-            currency="$"
+            price={816.72}
+            currency="₹"
             icon={icons.claude}
             billing="per month"
             color="#F5D154"
             category="June 25, 12:00"
             expanded={false}
-            onPress={() => {}}
+            onPress={() => { }}
           />
           <SubscriptionCard
             name="Canva"
-            price={43.89}
-            currency="$"
+            price={3642.87}
+            currency="₹"
             icon={icons.canva}
             billing="per month"
             color="#9DCDBB"
             category="June 30, 16:00"
             expanded={false}
-            onPress={() => {}}
+            onPress={() => { }}
           />
         </View>
-        
+
       </ScrollView>
     </SafeAreaView>
   );
