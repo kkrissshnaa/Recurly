@@ -69,7 +69,7 @@ export default function App() {
             </View>
 
             <View className="mb-5" >
-              <ListHeading title="Upcoming" onViewAll={() => router.push("/(tabs)/subscriptions")} />
+              <ListHeading title="Upcoming" />
               <FlatList
                 data={UPCOMING_SUBSCRIPTIONS}
                 renderItem={({ item }) => (<UpcomingSubsCard {...item} />)}
