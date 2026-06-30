@@ -135,7 +135,7 @@ const Insights = () => {
 
         {/* History Section */}
         <ListHeading title="History" onViewAll={() => { }} />
-        <View className="mt-4 gap-4 pb-8">
+        <View className="mt-4 gap-4 pb-8 px-4">
           <SubscriptionCard
             name="Claude"
             price={816.72}
