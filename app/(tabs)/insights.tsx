@@ -4,7 +4,7 @@ import { icons } from "@/constants/icons";
 import { clsx } from "clsx";
 import { useRouter } from "expo-router";
 import { styled } from "nativewind";
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
 
@@ -23,6 +23,14 @@ const rawChartData = [
 const Insights = () => {
   const router = useRouter();
 
+  // Find max value index for initial selected state
+  const initialSelectedIndex = useMemo(() => {
+    const maxVal = Math.max(...rawChartData.map((d) => d.value));
+    return rawChartData.findIndex((d) => d.value === maxVal);
+  }, []);
+
+  const [selectedIndex, setSelectedIndex] = useState(initialSelectedIndex);
+
   // Make chart functional by deriving state dynamically
   const { chartData, yLabels, yMax } = useMemo(() => {
     const maxVal = Math.max(...rawChartData.map((d) => d.value));
@@ -33,14 +41,14 @@ const Insights = () => {
     // Create 5 Y-axis labels
     const labels = [topY, topY * 0.75, topY * 0.5, topY * 0.25, 0].map(v => Math.round(v));
 
-    // Mark the maximum value as highlighted
-    const data = rawChartData.map((d) => ({
+    // Mark the selected value as highlighted
+    const data = rawChartData.map((d, index) => ({
       ...d,
-      highlight: d.value === maxVal,
+      highlight: index === selectedIndex,
     }));
 
     return { chartData: data, yLabels: labels, yMax: topY };
-  }, []);
+  }, [selectedIndex]);
 
   return (
     <SafeAreaView className="flex-1 bg-background px-5 pt-5 pb-20">
@@ -95,11 +103,15 @@ const Insights = () => {
               {/* Bars Container */}
               <View className="flex-1 flex-row justify-between">
                 {chartData.map((item, index) => (
-                  <View key={index} className="items-center h-full flex-1">
+                  <Pressable 
+                    key={index} 
+                    className="items-center h-full flex-1"
+                    onPress={() => setSelectedIndex(index)}
+                  >
                     {/* Bar Wrapper */}
                     <View className="flex-1 justify-end items-center pb-2 w-full">
                       {item.highlight && (
-                        <View className="bg-white rounded-[10px] px-2.5 py-[3px] absolute -top-8 z-20 items-center justify-center">
+                        <View className="bg-white rounded-[10px] px-2.5 py-[3px] absolute -top-8 z-20 items-center justify-center shadow-sm">
                           <Text className="text-accent font-sans-bold text-[11px]">₹{item.value}</Text>
                           <View className="absolute -bottom-1 w-2 h-2 bg-white rotate-45" />
                         </View>
@@ -110,10 +122,10 @@ const Insights = () => {
                       />
                     </View>
                     {/* X-axis Label */}
-                    <Text className="text-[11px] font-sans-medium text-muted-foreground h-4 text-center leading-none">
+                    <Text className={clsx("text-[11px] font-sans-medium h-4 text-center leading-none", item.highlight ? "text-accent" : "text-muted-foreground")}>
                       {item.day}
                     </Text>
-                  </View>
+                  </Pressable>
                 ))}
               </View>
             </View>
