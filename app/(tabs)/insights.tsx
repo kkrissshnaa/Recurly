@@ -10,7 +10,7 @@ import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNsafeAreaView);
 
-const rawChartData = [
+const rawChartDataMonth = [
   { day: 'Mon', value: 2905 },
   { day: 'Tue', value: 2490 },
   { day: 'Wed', value: 1660 },
@@ -20,20 +20,41 @@ const rawChartData = [
   { day: 'Sun', value: 1826 },
 ];
 
+const rawChartDataYear = [
+  { day: 'Jan', value: 12500 },
+  { day: 'Feb', value: 15400 },
+  { day: 'Mar', value: 18600 },
+  { day: 'Apr', value: 11200 },
+  { day: 'May', value: 19500 },
+  { day: 'Jun', value: 22400 },
+  { day: 'Jul', value: 14800 },
+];
+
 const Insights = () => {
   const router = useRouter();
 
+  const [timeframe, setTimeframe] = useState<'month' | 'year'>('month');
+  const activeData = timeframe === 'month' ? rawChartDataMonth : rawChartDataYear;
+
   // Find max value index for initial selected state
   const initialSelectedIndex = useMemo(() => {
-    const maxVal = Math.max(...rawChartData.map((d) => d.value));
-    return rawChartData.findIndex((d) => d.value === maxVal);
+    const maxVal = Math.max(...activeData.map((d) => d.value));
+    return activeData.findIndex((d) => d.value === maxVal);
   }, []);
 
   const [selectedIndex, setSelectedIndex] = useState(initialSelectedIndex);
 
+  const handleTimeframeChange = (newTimeframe: 'month' | 'year') => {
+    if (newTimeframe === timeframe) return;
+    setTimeframe(newTimeframe);
+    const newData = newTimeframe === 'month' ? rawChartDataMonth : rawChartDataYear;
+    const maxVal = Math.max(...newData.map((d) => d.value));
+    setSelectedIndex(newData.findIndex((d) => d.value === maxVal));
+  };
+
   // Make chart functional by deriving state dynamically
   const { chartData, yLabels, yMax } = useMemo(() => {
-    const maxVal = Math.max(...rawChartData.map((d) => d.value));
+    const maxVal = Math.max(...activeData.map((d) => d.value));
 
     // Calculate Y-axis top value (rounded up to nearest 1000 with a minimum of 1000)
     const topY = Math.max(1000, Math.ceil(maxVal / 1000) * 1000);
@@ -42,13 +63,13 @@ const Insights = () => {
     const labels = [topY, topY * 0.75, topY * 0.5, topY * 0.25, 0].map(v => Math.round(v));
 
     // Mark the selected value as highlighted
-    const data = rawChartData.map((d, index) => ({
+    const data = activeData.map((d, index) => ({
       ...d,
       highlight: index === selectedIndex,
     }));
 
     return { chartData: data, yLabels: labels, yMax: topY };
-  }, [selectedIndex]);
+  }, [selectedIndex, activeData]);
 
   return (
     <SafeAreaView className="flex-1 bg-background px-5 pt-5 pb-20">
@@ -62,13 +83,29 @@ const Insights = () => {
           >
             <Image source={icons.back} className="size-5" resizeMode="contain" />
           </Pressable>
-          <Text className="text-2xl font-sans-bold text-primary">Monthly insights</Text>
+          <Text className="text-2xl font-sans-bold text-primary">Insights</Text>
           <Pressable className="size-12 rounded-full border border-black/10 items-center justify-center bg-transparent">
             <View className="flex-row gap-[3px]">
               <View className="size-1 bg-primary rounded-full" />
               <View className="size-1 bg-primary rounded-full" />
               <View className="size-1 bg-primary rounded-full" />
             </View>
+          </Pressable>
+        </View>
+
+        {/* Timeframe Toggle */}
+        <View className="flex-row bg-black/5 rounded-full p-1 mb-6">
+          <Pressable 
+            className={clsx("flex-1 py-2.5 rounded-full items-center justify-center", timeframe === 'month' ? "bg-white shadow-sm" : "bg-transparent")}
+            onPress={() => handleTimeframeChange('month')}
+          >
+            <Text className={clsx("text-[13px] font-sans-medium", timeframe === 'month' ? "text-primary" : "text-muted-foreground")}>Month</Text>
+          </Pressable>
+          <Pressable 
+            className={clsx("flex-1 py-2.5 rounded-full items-center justify-center", timeframe === 'year' ? "bg-white shadow-sm" : "bg-transparent")}
+            onPress={() => handleTimeframeChange('year')}
+          >
+            <Text className={clsx("text-[13px] font-sans-medium", timeframe === 'year' ? "text-primary" : "text-muted-foreground")}>Year</Text>
           </Pressable>
         </View>
 
