@@ -1,50 +1,83 @@
-# Welcome to your Expo app 👋
+# Recurly - Subscription Manager
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+<div align="center">
+  <img src="./assets/screenshots/home.jpg" width="22%" alt="Home Screen"/>
+  &nbsp;&nbsp;
+  <img src="./assets/screenshots/insights.jpg" width="22%" alt="Insights Screen"/>
+  &nbsp;&nbsp;
+  <img src="./assets/screenshots/subscriptions.jpg" width="22%" alt="Subscriptions Screen"/>
+  &nbsp;&nbsp;
+  <img src="./assets/screenshots/settings.jpg" width="22%" alt="Settings Screen"/>
+</div>
 
-## Get started
+Recurly is a modern, beautifully designed subscription management app built with React Native and Expo. It helps you keep track of all your recurring expenses, upcoming bills, and overall spending in one unified dashboard.
 
-1. Install dependencies
+## ✨ Features
 
+- **📊 Visual Insights**: Track your upcoming bills with an interactive bar chart and view total monthly expenses.
+- **📅 Subscription Tracking**: Add, view, and manage all your active subscriptions (like Spotify, Adobe, Netflix) and their due dates.
+- **🔐 Secure Authentication**: Integrated with Clerk for seamless and secure user authentication.
+- **🎨 Beautiful UI**: Crafted with NativeWind (Tailwind CSS) for a premium, responsive, and cross-platform design.
+- **📱 Cross-Platform**: Works smoothly on both iOS and Android.
+
+## 🛠️ Technologies Used
+
+- **Framework**: [React Native](https://reactnative.dev/) & [Expo](https://expo.dev/) (File-based routing with Expo Router)
+- **Styling**: [NativeWind](https://www.nativewind.dev/) (Tailwind CSS for React Native)
+- **Authentication**: [Clerk](https://clerk.com/)
+- **Analytics**: [PostHog](https://posthog.com/)
+- **Date Utilities**: [Day.js](https://day.js.org/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+
+## 🚀 Getting Started
+
+Follow these steps to set up the project locally on your machine.
+
+### Prerequisites
+
+- Node.js (v18 or newer)
+- npm, yarn, or pnpm
+- Expo CLI
+
+### Installation
+
+1. **Clone the repository** (if applicable) and navigate to the project directory:
+   ```bash
+   git clone <your-repo-url>
+   cd recurly
+   ```
+
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-2. Start the app
+3. **Set up Environment Variables**:
+   Create a `.env` file in the root directory and add your required keys (e.g., Clerk Publishable Key).
+   ```env
+   EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_key_here
+   ```
 
+4. **Start the development server**:
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+5. **Run on your device**:
+   - Press `i` to open in iOS Simulator
+   - Press `a` to open in Android Emulator
+   - Scan the QR code with the Expo Go app on your physical device.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 📸 Screenshots
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+To make the preview images at the top work, please save the screenshots you provided into the following directory:
+`assets/screenshots/`
 
-## Get a fresh project
+Name them exactly as follows:
+- `home.jpg`
+- `insights.jpg`
+- `subscriptions.jpg`
+- `settings.jpg`
 
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+*Built with ❤️ for a better subscription tracking experience.*
