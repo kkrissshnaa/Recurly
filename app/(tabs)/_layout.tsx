@@ -33,6 +33,7 @@ const TabLayout = () => {
                     backgroundColor: colors.primary,
                     borderTopWidth: 0,
                     elevation: 0,
+                    paddingHorizontal: tabBar.horizontalInset,
                 },
                 tabBarItemStyle: {
                     paddingVertical: tabBar.height / 2 - tabBar.iconFrame / 1.6
