@@ -72,7 +72,7 @@ const Insights = () => {
   }, [selectedIndex, activeData]);
 
   return (
-    <SafeAreaView className="flex-1 bg-background px-5 pt-5 pb-20">
+    <SafeAreaView className="flex-1 bg-background px-8 pt-5 pb-20">
       <ScrollView showsVerticalScrollIndicator={false} contentContainerClassName="pb-24">
 
         {/* Header */}
@@ -184,7 +184,7 @@ const Insights = () => {
 
         {/* History Section */}
         <ListHeading title="History" onViewAll={() => { }} />
-        <View className="mt-4 gap-4 pb-8 px-4">
+        <View className="mt-4 gap-4 pb-8">
           <SubscriptionCard
             name="Claude"
             price={816.72}
