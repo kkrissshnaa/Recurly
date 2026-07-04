@@ -6,6 +6,7 @@ import React, { useState } from "react";
 import { ActivityIndicator, Alert, Image, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
 import ManageSubscriptionsModal from "@/components/ManageSubscriptionsModal";
+import PrivacyPolicyModal from "@/components/PrivacyPolicyModal";
 
 const SafeAreaView = styled(RNsafeAreaView);
 
@@ -14,6 +15,7 @@ export default function Settings() {
   const { signOut } = useClerk();
   const [loading, setLoading] = useState(false);
   const [isManageModalVisible, setManageModalVisible] = useState(false);
+  const [isPrivacyModalVisible, setPrivacyModalVisible] = useState(false);
 
   const handleSignOut = async () => {
     setLoading(true);
@@ -126,7 +128,10 @@ export default function Settings() {
               />
             </Pressable>
 
-            <Pressable className="flex-row items-center justify-between px-5 py-4 active:opacity-60">
+            <Pressable 
+              onPress={() => setPrivacyModalVisible(true)}
+              className="flex-row items-center justify-between px-5 py-4 active:opacity-60"
+            >
               <View className="flex-row items-center gap-3">
                 <Text className="text-base font-sans-semibold text-primary">Privacy Policy</Text>
               </View>
@@ -156,6 +161,10 @@ export default function Settings() {
       <ManageSubscriptionsModal 
         visible={isManageModalVisible} 
         onClose={() => setManageModalVisible(false)} 
+      />
+      <PrivacyPolicyModal
+        visible={isPrivacyModalVisible}
+        onClose={() => setPrivacyModalVisible(false)}
       />
     </SafeAreaView>
   );
