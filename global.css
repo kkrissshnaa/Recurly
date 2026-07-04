@@ -378,7 +378,7 @@
     }
 
     .modal-close-text {
-        @apply text-lg font-sans-bold text-primary;
+        @apply text-2xl font-sans-bold text-primary text-center mt-[-6px];
     }
 
     .modal-body {

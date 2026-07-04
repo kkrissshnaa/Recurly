@@ -79,12 +79,12 @@ const Insights = () => {
         <View className="flex-row justify-between items-center mb-6">
           <Pressable
             onPress={() => router.back()}
-            className="size-12 rounded-full border border-black/10 items-center justify-center bg-transparent"
+            className="size-10 ml-3 rounded-full border border-black/10 items-center justify-center bg-transparent"
           >
             <Image source={icons.back} className="size-5" resizeMode="contain" />
           </Pressable>
           <Text className="text-2xl font-sans-bold text-primary">Insights</Text>
-          <Pressable className="size-12 rounded-full border border-black/10 items-center justify-center bg-transparent">
+          <Pressable className="size-10 mr-3 rounded-full border border-black/10 items-center justify-center bg-transparent">
             <View className="flex-row gap-[3px]">
               <View className="size-1 bg-primary rounded-full" />
               <View className="size-1 bg-primary rounded-full" />
@@ -95,13 +95,13 @@ const Insights = () => {
 
         {/* Timeframe Toggle */}
         <View className="flex-row bg-black/5 rounded-full p-1 mb-6">
-          <Pressable 
+          <Pressable
             className={clsx("flex-1 py-2.5 rounded-full items-center justify-center", timeframe === 'month' ? "bg-white shadow-sm" : "bg-transparent")}
             onPress={() => handleTimeframeChange('month')}
           >
             <Text className={clsx("text-[13px] font-sans-medium", timeframe === 'month' ? "text-primary" : "text-muted-foreground")}>Month</Text>
           </Pressable>
-          <Pressable 
+          <Pressable
             className={clsx("flex-1 py-2.5 rounded-full items-center justify-center", timeframe === 'year' ? "bg-white shadow-sm" : "bg-transparent")}
             onPress={() => handleTimeframeChange('year')}
           >
@@ -140,8 +140,8 @@ const Insights = () => {
               {/* Bars Container */}
               <View className="flex-1 flex-row justify-between">
                 {chartData.map((item, index) => (
-                  <Pressable 
-                    key={index} 
+                  <Pressable
+                    key={index}
                     className="items-center h-full flex-1"
                     onPress={() => setSelectedIndex(index)}
                   >
