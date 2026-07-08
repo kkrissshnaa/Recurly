@@ -1,18 +1,18 @@
+import { useSignIn } from "@clerk/clerk-expo";
+import { useRouter } from "expo-router";
 import { styled } from "nativewind";
 import React, { useState } from "react";
 import {
-  Text,
-  View,
-  TextInput,
-  Pressable,
   ActivityIndicator,
-  ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
+  ScrollView,
+  Text,
+  TextInput,
+  View,
 } from "react-native";
 import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
-import { useSignIn } from "@clerk/clerk-expo";
-import { useRouter } from "expo-router";
 
 const SafeAreaView = styled(RNsafeAreaView);
 
@@ -107,9 +107,8 @@ export default function SignIn() {
               <View>
                 <Text className="text-sm font-sans-bold text-primary mb-2 pl-0.5 font-semibold">Email</Text>
                 <TextInput
-                  className={`rounded-2xl border border-border bg-background px-4 py-4 text-base font-sans-medium text-primary ${
-                    error && !email ? "border-destructive" : ""
-                  }`}
+                  className={`rounded-2xl border border-border bg-background px-4 py-4 text-base font-sans-medium text-primary ${error && !email ? "border-destructive" : ""
+                    }`}
                   autoCapitalize="none"
                   autoComplete="email"
                   keyboardType="email-address"
@@ -124,9 +123,8 @@ export default function SignIn() {
               <View className="mb-2">
                 <Text className="text-sm font-sans-bold text-primary mb-2 pl-0.5 font-semibold">Password</Text>
                 <TextInput
-                  className={`rounded-2xl border border-border bg-background px-4 py-4 text-base font-sans-medium text-primary ${
-                    error && !password ? "border-destructive" : ""
-                  }`}
+                  className={`rounded-2xl border border-border bg-background px-4 py-4 text-base font-sans-medium text-primary ${error && !password ? "border-destructive" : ""
+                    }`}
                   secureTextEntry
                   autoCapitalize="none"
                   autoComplete="password"
@@ -146,9 +144,8 @@ export default function SignIn() {
 
               {/* Submit Button */}
               <Pressable
-                className={`bg-accent py-4 rounded-2xl items-center mt-2 active:opacity-90 ${
-                  loading || !email || !password ? "opacity-60" : ""
-                }`}
+                className={`bg-accent py-4 rounded-2xl items-center mt-2 active:opacity-90 ${loading || !email || !password ? "opacity-60" : ""
+                  }`}
                 disabled={loading || !email || !password}
                 onPress={handleSignIn}
               >
