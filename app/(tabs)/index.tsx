@@ -10,10 +10,11 @@ import "@/global.css";
 import { formatCurrency } from "@/lib/utils";
 import { useUser } from "@clerk/clerk-expo";
 import dayjs from "dayjs";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import { styled } from "nativewind";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { FlatList, Image, Pressable, Text, View } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
 
 const SafeAreaView = styled(RNsafeAreaView);
@@ -25,6 +26,23 @@ export default function App() {
   const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const { subscriptions, addSubscription } = useSubscriptions();
+  const [localImageURI, setLocalImageURI] = useState<string | null>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      const loadProfileImage = async () => {
+        try {
+          const storedImage = await AsyncStorage.getItem("profileImage");
+          if (storedImage) {
+            setLocalImageURI(storedImage);
+          }
+        } catch (error) {
+          console.error("Failed to load profile image", error);
+        }
+      };
+      loadProfileImage();
+    }, [])
+  );
 
   const displayName = user
     ? user.firstName || user.emailAddresses[0]?.emailAddress.split("@")[0]
@@ -42,7 +60,7 @@ export default function App() {
             <View className="home-header">
               <View className="home-user">
                 <Image
-                  source={user?.imageUrl ? { uri: user.imageUrl } : images.avatar}
+                  source={localImageURI ? { uri: localImageURI } : (user?.imageUrl ? { uri: user.imageUrl } : images.avatar)}
                   className="home-avatar"
                 />
                 <Text className="home-user-name">{displayName}</Text>
