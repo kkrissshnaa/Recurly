@@ -1,12 +1,14 @@
+import ManageSubscriptionsModal from "@/components/ManageSubscriptionsModal";
+import PrivacyPolicyModal from "@/components/PrivacyPolicyModal";
 import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import { useClerk, useUser } from "@clerk/clerk-expo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
 import { styled } from "nativewind";
 import React, { useState } from "react";
 import { ActivityIndicator, Alert, Image, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
-import ManageSubscriptionsModal from "@/components/ManageSubscriptionsModal";
-import PrivacyPolicyModal from "@/components/PrivacyPolicyModal";
 
 const SafeAreaView = styled(RNsafeAreaView);
 
@@ -16,6 +18,40 @@ export default function Settings() {
   const [loading, setLoading] = useState(false);
   const [isManageModalVisible, setManageModalVisible] = useState(false);
   const [isPrivacyModalVisible, setPrivacyModalVisible] = useState(false);
+  const [localImageURI, setLocalImageURI] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    const loadProfileImage = async () => {
+      try {
+        const storedImage = await AsyncStorage.getItem("profileImage");
+        if (storedImage) {
+          setLocalImageURI(storedImage);
+        }
+      } catch (error) {
+        console.error("Failed to load profile image", error);
+      }
+    };
+    loadProfileImage();
+  }, []);
+
+  const handlePickImage = async () => {
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ['images'],
+        allowsEditing: false,
+        aspect: [1, 1],
+        quality: 1,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const uri = result.assets[0].uri;
+        setLocalImageURI(uri);
+        await AsyncStorage.setItem("profileImage", uri);
+      }
+    } catch (error) {
+      console.error("Failed to pick image", error);
+    }
+  };
 
   const handleSignOut = async () => {
     setLoading(true);
@@ -48,10 +84,12 @@ export default function Settings() {
 
         {/* Profile Card */}
         <View className="rounded-3xl border border-border bg-card p-5 mb-8 flex-row items-center gap-4">
-          <Image
-            source={user?.imageUrl ? { uri: user.imageUrl } : images.avatar}
-            className="size-16 rounded-full"
-          />
+          <Pressable onPress={handlePickImage} className="relative active:opacity-80">
+            <Image
+              source={localImageURI ? { uri: localImageURI } : (user?.imageUrl ? { uri: user.imageUrl } : images.avatar)}
+              className="size-16 rounded-full"
+            />
+          </Pressable>
           <View className="flex-1">
             <Text className="text-xl font-sans-bold text-primary">{displayName}</Text>
             {emailAddress ? (
@@ -114,7 +152,7 @@ export default function Settings() {
             Account Security
           </Text>
           <View className="rounded-3xl border border-border bg-card overflow-hidden">
-            <Pressable 
+            <Pressable
               onPress={() => setManageModalVisible(true)}
               className="flex-row items-center justify-between px-5 py-4 border-b border-border active:opacity-60"
             >
@@ -128,7 +166,7 @@ export default function Settings() {
               />
             </Pressable>
 
-            <Pressable 
+            <Pressable
               onPress={() => setPrivacyModalVisible(true)}
               className="flex-row items-center justify-between px-5 py-4 active:opacity-60"
             >
@@ -158,9 +196,9 @@ export default function Settings() {
         </Pressable>
       </ScrollView>
 
-      <ManageSubscriptionsModal 
-        visible={isManageModalVisible} 
-        onClose={() => setManageModalVisible(false)} 
+      <ManageSubscriptionsModal
+        visible={isManageModalVisible}
+        onClose={() => setManageModalVisible(false)}
       />
       <PrivacyPolicyModal
         visible={isPrivacyModalVisible}
