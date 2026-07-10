@@ -46,8 +46,8 @@ export default function SignIn() {
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
       } else {
-        console.warn("Sign in status not complete:", result.status);
-        setError("Sign in requires additional verification steps.");
+        console.warn("Sign in status not complete:", result.status, result);
+        setError(`Additional verification required. Status: ${result.status}`);
       }
     } catch (err: any) {
       const errorCode = err.errors?.[0]?.code || err.code || "unknown_error";
