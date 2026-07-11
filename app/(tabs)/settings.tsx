@@ -7,7 +7,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { styled } from "nativewind";
 import React, { useState } from "react";
-import { ActivityIndicator, Alert, Image, Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Image, Modal, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
 import { useCurrency } from "@/context/CurrencyContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -22,6 +22,9 @@ export default function Settings() {
   const [isManageModalVisible, setManageModalVisible] = useState(false);
   const [isPrivacyModalVisible, setPrivacyModalVisible] = useState(false);
   const [isCurrencyModalVisible, setCurrencyModalVisible] = useState(false);
+  const [isNameModalVisible, setNameModalVisible] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [updatingName, setUpdatingName] = useState(false);
   const [localImageURI, setLocalImageURI] = useState<string | null>(null);
 
   React.useEffect(() => {
@@ -72,6 +75,27 @@ export default function Settings() {
     }
   };
 
+  const handleUpdateName = async () => {
+    if (!user || !newName.trim()) return;
+    setUpdatingName(true);
+    try {
+      const parts = newName.trim().split(" ");
+      const firstName = parts[0] || "";
+      const lastName = parts.slice(1).join(" ") || "";
+      
+      await user.update({
+        firstName,
+        lastName,
+      });
+      setNameModalVisible(false);
+    } catch (error: any) {
+      console.error("Name update error:", error);
+      Alert.alert("Error", error.errors?.[0]?.message || "Failed to update name");
+    } finally {
+      setUpdatingName(false);
+    }
+  };
+
   const displayName = user
     ? user.fullName || user.emailAddresses[0]?.emailAddress.split("@")[0]
     : "Recurly User";
@@ -98,7 +122,18 @@ export default function Settings() {
             </View>
           </Pressable>
           <View className="flex-1">
-            <Text className="text-xl font-sans-bold text-primary">{displayName}</Text>
+            <View className="flex-row items-center">
+              <Text className="text-xl font-sans-bold text-primary mr-2" numberOfLines={1}>{displayName}</Text>
+              <Pressable 
+                onPress={() => {
+                  setNewName(user?.fullName || "");
+                  setNameModalVisible(true);
+                }} 
+                className="p-1 active:opacity-60"
+              >
+                <MaterialCommunityIcons name="pencil-outline" size={18} color="#081126" />
+              </Pressable>
+            </View>
             {emailAddress ? (
               <Text className="text-sm font-sans-medium text-muted-foreground mt-0.5">
                 {emailAddress}
@@ -260,6 +295,55 @@ export default function Settings() {
                 <View className="size-5 rounded-full bg-accent items-center justify-center">
                   <Text className="text-white text-xs font-sans-bold">✓</Text>
                 </View>
+              )}
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
+
+      {/* Name Change Modal */}
+      <Modal
+        visible={isNameModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setNameModalVisible(false)}
+      >
+        <View className="flex-1 justify-end bg-black/50">
+          <View className="bg-background rounded-t-3xl p-5 pb-10">
+            <View className="flex-row items-center justify-between mb-6">
+              <Text className="text-xl font-sans-bold text-primary">Edit Name</Text>
+              <Pressable onPress={() => setNameModalVisible(false)} className="p-2">
+                <Text className="text-2xl text-muted-foreground leading-none">×</Text>
+              </Pressable>
+            </View>
+            
+            <View className="mb-6">
+              <Text className="text-sm font-sans-semibold text-muted-foreground mb-2 ml-1">Full Name</Text>
+              <View className="bg-card border border-border rounded-2xl px-4 py-3">
+                <TextInput
+                  value={newName}
+                  onChangeText={setNewName}
+                  placeholder="Enter your full name"
+                  placeholderTextColor="#9CA3AF"
+                  className="font-sans-medium text-base text-primary"
+                  autoCapitalize="words"
+                  autoCorrect={false}
+                  autoFocus
+                />
+              </View>
+            </View>
+
+            <Pressable
+              onPress={handleUpdateName}
+              disabled={updatingName || !newName.trim()}
+              className={`items-center rounded-2xl py-4 active:opacity-80 ${
+                updatingName || !newName.trim() ? "bg-primary/50" : "bg-primary"
+              }`}
+            >
+              {updatingName ? (
+                <ActivityIndicator color="#ffffff" />
+              ) : (
+                <Text className="text-base font-sans-bold text-white">Save Changes</Text>
               )}
             </Pressable>
           </View>
