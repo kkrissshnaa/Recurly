@@ -7,6 +7,7 @@ import { styled } from "nativewind";
 import React, { useMemo, useState } from 'react';
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
+import { useCurrency } from "@/context/CurrencyContext";
 
 const SafeAreaView = styled(RNsafeAreaView);
 
@@ -32,6 +33,7 @@ const rawChartDataYear = [
 
 const Insights = () => {
   const router = useRouter();
+  const { formatPrice, currency } = useCurrency();
 
   const [timeframe, setTimeframe] = useState<'month' | 'year'>('month');
   const activeData = timeframe === 'month' ? rawChartDataMonth : rawChartDataYear;
@@ -149,7 +151,7 @@ const Insights = () => {
                     <View className="flex-1 justify-end items-center pb-2 w-full">
                       {item.highlight && (
                         <View className="bg-white rounded-[10px] px-2.5 py-[3px] absolute -top-8 z-20 items-center justify-center shadow-sm">
-                          <Text className="text-accent font-sans-bold text-[11px]">₹{item.value}</Text>
+                          <Text className="text-accent font-sans-bold text-[11px]">{formatPrice(item.value)}</Text>
                           <View className="absolute -bottom-1 w-2 h-2 bg-white rotate-45" />
                         </View>
                       )}
@@ -177,7 +179,7 @@ const Insights = () => {
             <Text className="text-[13px] font-sans-medium text-muted-foreground mt-1">March 2026</Text>
           </View>
           <View className="items-end">
-            <Text className="text-xl font-sans-bold text-primary">-₹35,244.29</Text>
+            <Text className="text-xl font-sans-bold text-primary">-{formatPrice(35244.29)}</Text>
             <Text className="text-[13px] font-sans-medium text-muted-foreground mt-1">+12%</Text>
           </View>
         </View>
@@ -188,7 +190,7 @@ const Insights = () => {
           <SubscriptionCard
             name="Claude"
             price={816.72}
-            currency="₹"
+            currency="INR"
             icon={icons.claude}
             billing="per month"
             color="#F5D154"
@@ -199,7 +201,7 @@ const Insights = () => {
           <SubscriptionCard
             name="Canva"
             price={3642.87}
-            currency="₹"
+            currency="INR"
             icon={icons.canva}
             billing="per month"
             color="#9DCDBB"

@@ -1,11 +1,12 @@
-import { formatCurrency } from '@/lib/utils';
 import React from 'react';
 import { Text, View } from 'react-native';
 import { Image } from 'expo-image';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useCurrency } from '@/context/CurrencyContext';
 
-const UpcomingSubsCard = ({ name, price, daysLeft, icon, currency}:
+const UpcomingSubsCard = ({ name, price, daysLeft, icon, currency: originalCurrency}:
   UpcomingSubscription) => {
+  const { formatPrice } = useCurrency();
   return (
     <View className='upcoming-card'>
       <View className='upcoming-row'>
@@ -17,7 +18,7 @@ const UpcomingSubsCard = ({ name, price, daysLeft, icon, currency}:
           <Image source={icon} className='upcoming-icon' style={{ width: 40, height: 40 }}/>
         )}
         <View>
-          <Text className="upcoming-price">{formatCurrency(price, currency)}</Text>
+          <Text className="upcoming-price">{formatPrice(price, originalCurrency)}</Text>
           <Text className="upcoming-meta" numberOfLines={1}>
             {daysLeft > 1 ? `${daysLeft} days left`: 'Last day'} 
           </Text>

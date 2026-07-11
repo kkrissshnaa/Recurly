@@ -7,6 +7,7 @@ import { tokenCache } from "@/lib/tokenCache";
 import { View, ActivityIndicator } from "react-native";
 import { PostHogProvider } from "posthog-react-native";
 import { SubscriptionsProvider } from "@/context/SubscriptionsContext";
+import { CurrencyProvider } from "@/context/CurrencyContext";
 
 const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!;
 
@@ -52,9 +53,11 @@ function InitialLayout() {
   }
 
   return (
-    <SubscriptionsProvider key={userId || 'guest'}>
-      <Stack screenOptions={{ headerShown: false }} />
-    </SubscriptionsProvider>
+    <CurrencyProvider>
+      <SubscriptionsProvider key={userId || 'guest'}>
+        <Stack screenOptions={{ headerShown: false }} />
+      </SubscriptionsProvider>
+    </CurrencyProvider>
   );
 }
 

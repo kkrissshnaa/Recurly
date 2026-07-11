@@ -7,17 +7,21 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { styled } from "nativewind";
 import React, { useState } from "react";
-import { ActivityIndicator, Alert, Image, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Alert, Image, Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
+import { useCurrency } from "@/context/CurrencyContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const SafeAreaView = styled(RNsafeAreaView);
 
 export default function Settings() {
   const { user } = useUser();
   const { signOut } = useClerk();
+  const { currency, setCurrency } = useCurrency();
   const [loading, setLoading] = useState(false);
   const [isManageModalVisible, setManageModalVisible] = useState(false);
   const [isPrivacyModalVisible, setPrivacyModalVisible] = useState(false);
+  const [isCurrencyModalVisible, setCurrencyModalVisible] = useState(false);
   const [localImageURI, setLocalImageURI] = useState<string | null>(null);
 
   React.useEffect(() => {
@@ -89,6 +93,9 @@ export default function Settings() {
               source={localImageURI ? { uri: localImageURI } : (user?.imageUrl ? { uri: user.imageUrl } : images.avatar)}
               className="size-16 rounded-full"
             />
+            <View className="absolute bottom-0 right-0 bg-primary rounded-full p-1 border-2 border-card">
+              <MaterialCommunityIcons name="pencil" size={12} color="#ffffff" />
+            </View>
           </Pressable>
           <View className="flex-1">
             <Text className="text-xl font-sans-bold text-primary">{displayName}</Text>
@@ -124,12 +131,17 @@ export default function Settings() {
               />
             </Pressable>
 
-            <Pressable className="flex-row items-center justify-between px-5 py-4 border-b border-border active:opacity-60">
+            <Pressable 
+              onPress={() => setCurrencyModalVisible(true)}
+              className="flex-row items-center justify-between px-5 py-4 border-b border-border active:opacity-60"
+            >
               <View className="flex-row items-center gap-3">
                 <Image source={icons.wallet} className="size-5" style={{ tintColor: "#081126" }} />
                 <Text className="text-base font-sans-semibold text-primary">Default Currency</Text>
               </View>
-              <Text className="text-sm font-sans-bold text-accent">INR (₹)</Text>
+              <Text className="text-sm font-sans-bold text-accent">
+                {currency === "INR" ? "INR (₹)" : "USD ($)"}
+              </Text>
             </Pressable>
 
             <Pressable className="flex-row items-center justify-between px-5 py-4 active:opacity-60">
@@ -204,6 +216,55 @@ export default function Settings() {
         visible={isPrivacyModalVisible}
         onClose={() => setPrivacyModalVisible(false)}
       />
+      
+      {/* Currency Selection Modal */}
+      <Modal
+        visible={isCurrencyModalVisible}
+        animationType="slide"
+        transparent={true}
+        onRequestClose={() => setCurrencyModalVisible(false)}
+      >
+        <View className="flex-1 justify-end bg-black/50">
+          <View className="bg-background rounded-t-3xl p-5 pb-10">
+            <View className="flex-row items-center justify-between mb-6">
+              <Text className="text-xl font-sans-bold text-primary">Select Currency</Text>
+              <Pressable onPress={() => setCurrencyModalVisible(false)} className="p-2">
+                <Text className="text-2xl text-muted-foreground leading-none">×</Text>
+              </Pressable>
+            </View>
+            
+            <Pressable 
+              onPress={() => {
+                setCurrency("INR");
+                setCurrencyModalVisible(false);
+              }}
+              className="flex-row items-center justify-between p-4 mb-3 rounded-2xl border border-border bg-card"
+            >
+              <Text className="text-base font-sans-semibold text-primary">Rupee (INR)</Text>
+              {currency === "INR" && (
+                <View className="size-5 rounded-full bg-accent items-center justify-center">
+                  <Text className="text-white text-xs font-sans-bold">✓</Text>
+                </View>
+              )}
+            </Pressable>
+            
+            <Pressable 
+              onPress={() => {
+                setCurrency("USD");
+                setCurrencyModalVisible(false);
+              }}
+              className="flex-row items-center justify-between p-4 rounded-2xl border border-border bg-card"
+            >
+              <Text className="text-base font-sans-semibold text-primary">Dollar (USD)</Text>
+              {currency === "USD" && (
+                <View className="size-5 rounded-full bg-accent items-center justify-center">
+                  <Text className="text-white text-xs font-sans-bold">✓</Text>
+                </View>
+              )}
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
