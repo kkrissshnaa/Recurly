@@ -1,6 +1,5 @@
 import { icons } from "@/constants/icons";
 import { useSubscriptions } from "@/context/SubscriptionsContext";
-import { formatCurrency } from "@/lib/utils";
 import React from "react";
 import {
   FlatList,
@@ -13,6 +12,7 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useCurrency } from "@/context/CurrencyContext";
 
 interface ManageSubscriptionsModalProps {
   visible: boolean;
@@ -24,6 +24,7 @@ export default function ManageSubscriptionsModal({
   onClose,
 }: ManageSubscriptionsModalProps) {
   const { subscriptions, deleteSubscription } = useSubscriptions();
+  const { formatPrice } = useCurrency();
 
   return (
     <Modal
@@ -70,7 +71,7 @@ export default function ManageSubscriptionsModal({
                       {item.name}
                     </Text>
                     <Text className="text-sm font-sans-medium text-muted-foreground" numberOfLines={1}>
-                      {formatCurrency(item.price, item.currency)} • {item.billing}
+                      {formatPrice(item.price, item.currency)} • {item.billing}
                     </Text>
                   </View>
                 </View>

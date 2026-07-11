@@ -1,11 +1,14 @@
-import { formatCurrency, formatStatusLabel, formatSubscriptionDateTime } from '@/lib/utils'
+import { formatStatusLabel, formatSubscriptionDateTime } from '@/lib/utils'
 import clsx from 'clsx'
 import React from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { Image } from 'expo-image'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
+import { useCurrency } from '@/context/CurrencyContext'
 
-const SubscriptionCard = ({name, price, currency, icon, billing, color, category, plan, renewalDate, expanded, onPress, paymentMethod, startDate, status}: SubscriptionCardProps) => {
+const SubscriptionCard = ({name, price, currency: originalCurrency, icon, billing, color, category, plan, renewalDate, expanded, onPress, paymentMethod, startDate, status}: SubscriptionCardProps) => {
+  const { formatPrice } = useCurrency();
   return (
     <Pressable onPress={onPress} className={clsx('sub-card', expanded ? 'sub-card-expanded': 'bg-card')} style={!expanded && color ? {backgroundColor : color, borderColor: 'transparent'} : undefined} >
         <View className='sub-head'>
@@ -27,7 +30,7 @@ const SubscriptionCard = ({name, price, currency, icon, billing, color, category
                 </View>
             </View>
             <View className='sub-price-box'>
-                <Text className='sub-price'>{formatCurrency(price, currency)}</Text>
+                <Text className='sub-price'>{formatPrice(price, originalCurrency)}</Text>
                 <Text className='sub-billing'>{billing}</Text>
             </View>
         </View>

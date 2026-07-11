@@ -7,7 +7,7 @@ import { icons } from "@/constants/icons";
 import images from "@/constants/images";
 import { useSubscriptions } from "@/context/SubscriptionsContext";
 import "@/global.css";
-import { formatCurrency } from "@/lib/utils";
+import { useCurrency } from "@/context/CurrencyContext";
 import { useUser } from "@clerk/clerk-expo";
 import dayjs from "dayjs";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -26,6 +26,7 @@ export default function App() {
   const [expandedSubscriptionId, setExpandedSubscriptionId] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const { subscriptions, addSubscription } = useSubscriptions();
+  const { formatPrice } = useCurrency();
   const [localImageURI, setLocalImageURI] = useState<string | null>(null);
 
   useFocusEffect(
@@ -78,7 +79,7 @@ export default function App() {
               <Text className="home-balance-label">Balance</Text>
               <View className="home-balance-row">
                 <Text className="home-balance-amount">
-                  {formatCurrency(HOME_BALANCE.amount)}
+                  {formatPrice(HOME_BALANCE.amount)}
                 </Text>
                 <Text className="home-balance-date">
                   {dayjs(HOME_BALANCE.nextRenewalDate).format('DD/MM')}
