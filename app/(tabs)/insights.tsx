@@ -1,13 +1,13 @@
 import ListHeading from "@/components/ListHeading";
 import SubscriptionCard from "@/components/SubscriptionCard";
 import { icons } from "@/constants/icons";
+import { useCurrency } from "@/context/CurrencyContext";
 import { clsx } from "clsx";
 import { useRouter } from "expo-router";
 import { styled } from "nativewind";
 import React, { useMemo, useState } from 'react';
 import { Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
-import { useCurrency } from "@/context/CurrencyContext";
 
 const SafeAreaView = styled(RNsafeAreaView);
 
@@ -173,7 +173,7 @@ const Insights = () => {
         </View>
 
         {/* Expenses Card */}
-        <View className="rounded-[20px] border border-black/5 bg-[#FBF6EA] p-5 my-6 flex-row justify-between items-center">
+        <View className="rounded-[20px] border border-black/5 bg-[#FBF6EA] p-5 ml-3 mr-3 my-6 flex-row justify-between items-center">
           <View>
             <Text className="text-xl font-sans-bold text-primary">Expenses</Text>
             <Text className="text-[13px] font-sans-medium text-muted-foreground mt-1">March 2026</Text>
