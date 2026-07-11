@@ -10,6 +10,7 @@ import React, { useState } from "react";
 import { ActivityIndicator, Alert, Image, Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView as RNsafeAreaView } from "react-native-safe-area-context";
 import { useCurrency } from "@/context/CurrencyContext";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const SafeAreaView = styled(RNsafeAreaView);
 
@@ -92,6 +93,9 @@ export default function Settings() {
               source={localImageURI ? { uri: localImageURI } : (user?.imageUrl ? { uri: user.imageUrl } : images.avatar)}
               className="size-16 rounded-full"
             />
+            <View className="absolute bottom-0 right-0 bg-primary rounded-full p-1 border-2 border-card">
+              <MaterialCommunityIcons name="pencil" size={12} color="#ffffff" />
+            </View>
           </Pressable>
           <View className="flex-1">
             <Text className="text-xl font-sans-bold text-primary">{displayName}</Text>
